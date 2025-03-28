@@ -12,7 +12,6 @@ const FEE_COMPLETION = 0.001;
 const openai = {
   sendMessage: async (input, {apiKey, model}) => {
     console.log("prompting chat gpt...");
-    console.log("prompt: ", input);
     const api = new ChatGPTAPI({
       apiKey,
       completionParams: {
@@ -26,23 +25,22 @@ const openai = {
 
   getPromptForSingleCommit: (diff, {commitType, customMessageConvention, language}) => {
     return (
-      `Como experto en Git, genera un mensaje de commit profesional basado en el siguiente diff en ${language}.` +
-      (commitType ? ` Usa el tipo de commit '${commitType}'.` : '') +
-      `${customMessageConvention ? ` Aplica las siguientes reglas del objeto JSON, usa la clave como lo que debe cambiarse y el valor como cómo debe cambiarse en tu respuesta: ${customMessageConvention}.` : ''}` +
-      'No agregues prefijos al commit, usa tiempo presente, y devuelve la oración completa incluyendo el tipo de commit' +
-      `${customMessageConvention ? `. Además, aplica estas reglas con formato JSON a tu respuesta, incluso si contradicen las reglas anteriores ${customMessageConvention}: ` : ': '}` +
-      '\n\n'+
+      `Escribe un mensaje de commit como si fueras un editor de código con personalidad. El mensaje debe ser claro y directo, pero con un toque de carácter, como si estuvieras contándole a un colega lo que hiciste y por qué lo hiciste.` +
+      (commitType ? ` Tipo de commit: ${commitType}. ` : '') +
+      `${customMessageConvention ? `Aplica el siguiente estilo con convenciones específicas de commit: ${customMessageConvention}. ` : ''}` +
+      "No olvides que debe ser conciso, pero también reflejar la esencia de los cambios." +
+      '\n\n' +
       diff
     );
   },
 
   getPromptForMultipleCommits: (diff, {commitType, customMessageConvention, numOptions, language}) => {
     return (
-      `Como experto en Git, genera ${numOptions} mensajes de commit profesionales basados en el siguiente diff en ${language}.` +
-      (commitType ? ` Usa el tipo de commit '${commitType}'.` : '') +
-      ` Separa cada opción con ";".` +
-      'Para cada opción, usa tiempo presente y devuelve la oración completa incluyendo el tipo de commit' +
-      `${customMessageConvention ? `. Además, aplica estas reglas con formato JSON a tu respuesta, incluso si contradicen las reglas anteriores ${customMessageConvention}: ` : ': '}` +
+      `Escribe ${numOptions} mensajes de commit como si fueras un editor de código con personalidad. Los mensajes deben ser claros y directos, pero con un toque de carácter, como si estuvieras contándole a un colega lo que hiciste y por qué lo hiciste. Separa cada opción con ";".` +
+      (commitType ? ` Tipo de commit: ${commitType}. ` : '') +
+      `${customMessageConvention ? `Aplica el siguiente estilo con convenciones específicas de commit: ${customMessageConvention}. ` : ''}` +
+      "No olvides que deben ser concisos, pero también reflejar la esencia de los cambios." +
+      '\n\n' +
       diff
     );
   },

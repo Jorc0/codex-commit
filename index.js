@@ -74,7 +74,6 @@ const getPromptForSingleCommit = (diff) => {
 
 const generateSingleCommit = async (diff) => {
   const prompt = getPromptForSingleCommit(diff)
-  console.log(prompt)
   if (!await provider.filterApi({ prompt, filterFee: args['filter-fee'] })) process.exit(1);
 
   const text = await provider.sendMessage(prompt, { apiKey, model: MODEL });
