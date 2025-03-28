@@ -25,22 +25,31 @@ const openai = {
 
   getPromptForSingleCommit: (diff, {commitType, customMessageConvention, language}) => {
     return (
-      `Escribe un mensaje de commit como si fueras un editor de código con personalidad. El mensaje debe ser claro y directo, pero con un toque de carácter, como si estuvieras contándole a un colega lo que hiciste y por qué lo hiciste.` +
-      (commitType ? ` Tipo de commit: ${commitType}. ` : '') +
-      `${customMessageConvention ? `Aplica el siguiente estilo con convenciones específicas de commit: ${customMessageConvention}. ` : ''}` +
-      "No olvides que debe ser conciso, pero también reflejar la esencia de los cambios." +
-      '\n\n' +
+      `TAREA: Genera un mensaje de commit basado en el siguiente diff de git.` +
+      `\nREGLAS:` +
+      `\n- Sé conciso y directo` +
+      `\n- Explica qué cambió y por qué` +
+      `\n- No respondas como en una conversación` +
+      `\n- Solo devuelve el mensaje del commit` +
+      (commitType ? `\n- Usa el tipo de commit: ${commitType}` : '') +
+      (customMessageConvention ? `\n- Aplica estas convenciones: ${customMessageConvention}` : '') +
+      `\n\nDIFF DEL CAMBIO:\n` +
       diff
     );
   },
 
   getPromptForMultipleCommits: (diff, {commitType, customMessageConvention, numOptions, language}) => {
     return (
-      `Escribe ${numOptions} mensajes de commit como si fueras un editor de código con personalidad. Los mensajes deben ser claros y directos, pero con un toque de carácter, como si estuvieras contándole a un colega lo que hiciste y por qué lo hiciste. Separa cada opción con ";".` +
-      (commitType ? ` Tipo de commit: ${commitType}. ` : '') +
-      `${customMessageConvention ? `Aplica el siguiente estilo con convenciones específicas de commit: ${customMessageConvention}. ` : ''}` +
-      "No olvides que deben ser concisos, pero también reflejar la esencia de los cambios." +
-      '\n\n' +
+      `TAREA: Genera ${numOptions} mensajes de commit diferentes basados en el siguiente diff de git.` +
+      `\nREGLAS:` +
+      `\n- Sé conciso y directo en cada mensaje` +
+      `\n- Explica qué cambió y por qué` +
+      `\n- No respondas como en una conversación` +
+      `\n- Separa cada mensaje con ";"` +
+      `\n- Solo devuelve los mensajes de commit` +
+      (commitType ? `\n- Usa el tipo de commit: ${commitType}` : '') +
+      (customMessageConvention ? `\n- Aplica estas convenciones: ${customMessageConvention}` : '') +
+      `\n\nDIFF DEL CAMBIO:\n` +
       diff
     );
   },
