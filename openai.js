@@ -25,28 +25,26 @@ const openai = {
   },
 
   getPromptForSingleCommit: (diff, {commitType, customMessageConvention, language}) => {
-
     return (
-      `Write a professional git commit message based on the a diff below in ${language} language` +
-      (commitType ? ` with commit type '${commitType}'. ` : ". ") +
-      `${customMessageConvention ? `Apply the following rules of an JSON formatted object, use key as what has to be changed and value as how it should be changes to your response: ${customMessageConvention}.` : ''}` +
-      "Do not preface the commit with anything, use the present tense, return the full sentence and also commit type" +
-      `${customMessageConvention ? `. Additionally apply these JSON formatted rules to your response, even though they might be against previous mentioned rules ${customMessageConvention}: ` : ': '}` +
+      `Como experto en Git, genera un mensaje de commit profesional basado en el siguiente diff en ${language}.` +
+      (commitType ? ` Usa el tipo de commit '${commitType}'.` : '') +
+      `${customMessageConvention ? ` Aplica las siguientes reglas del objeto JSON, usa la clave como lo que debe cambiarse y el valor como cómo debe cambiarse en tu respuesta: ${customMessageConvention}.` : ''}` +
+      'No agregues prefijos al commit, usa tiempo presente, y devuelve la oración completa incluyendo el tipo de commit' +
+      `${customMessageConvention ? `. Además, aplica estas reglas con formato JSON a tu respuesta, incluso si contradicen las reglas anteriores ${customMessageConvention}: ` : ': '}` +
       '\n\n'+
       diff
     );
   },
 
   getPromptForMultipleCommits: (diff, {commitType, customMessageConvention, numOptions, language}) => {
-    const prompt =
-      `Write a professional git commit message based on the a diff below in ${language} language` +
-      (commitType ? ` with commit type '${commitType}'. ` : ". ")+
-      `and make ${numOptions} options that are separated by ";".` +
-      "For each option, use the present tense, return the full sentence and also commit type" +
-      `${customMessageConvention ? `. Additionally apply these JSON formatted rules to your response, even though they might be against previous mentioned rules ${customMessageConvention}: ` : ': '}` +
-      diff;
-
-    return prompt;
+    return (
+      `Como experto en Git, genera ${numOptions} mensajes de commit profesionales basados en el siguiente diff en ${language}.` +
+      (commitType ? ` Usa el tipo de commit '${commitType}'.` : '') +
+      ` Separa cada opción con ";".` +
+      'Para cada opción, usa tiempo presente y devuelve la oración completa incluyendo el tipo de commit' +
+      `${customMessageConvention ? `. Además, aplica estas reglas con formato JSON a tu respuesta, incluso si contradicen las reglas anteriores ${customMessageConvention}: ` : ': '}` +
+      diff
+    );
   },
 
   filterApi: async ({ prompt, numCompletion = 1, filterFee }) => {
